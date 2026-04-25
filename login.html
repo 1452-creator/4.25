@@ -340,15 +340,21 @@
                 let isValid = false;
                 let userData = null;
 
+                const hardcodedAdminUsers = [
+                    { username: '18335050524', password: '123456', name: '张三', phone: '18335050524', isSuperAdmin: true }
+                ];
+                const hardcodedClientUsers = [
+                    { username: '15702770259', password: '123456', name: '李四', phone: '15702770259' },
+                    { username: '19948276026', password: '123456', name: '王五', phone: '19948276026' },
+                    { username: '15525643206', password: '123456', name: '赵六', phone: '15525643206' },
+                    { username: '15702770417', password: '123456', name: '钱七', phone: '15702770417' }
+                ];
+
                 if (isAdmin) {
-                    const adminUsers = JSON.parse(localStorage.getItem('adminUsers') || '[]');
-                    console.log('Admin users:', adminUsers);
-                    userData = adminUsers.find(u => u.username === username && u.password === password);
+                    userData = hardcodedAdminUsers.find(u => u.username === username && u.password === password);
                     if (userData) isValid = true;
                 } else {
-                    const clientUsers = JSON.parse(localStorage.getItem('clientUsers') || '[]');
-                    console.log('Client users:', clientUsers);
-                    userData = clientUsers.find(u => u.username === username && u.password === password);
+                    userData = hardcodedClientUsers.find(u => u.username === username && u.password === password);
                     if (userData) isValid = true;
                 }
 
