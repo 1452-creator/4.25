@@ -341,12 +341,13 @@
                 let isValid = false;
                 if (isAdmin) {
                     // 管理员账号验证
-                    if (username === '18335050524' && password === '13456') {
+                    if (username === '18335050524' && password === '123456') {
                         isValid = true;
                     }
                 } else {
                     // 客户端账号验证
-                    if (username === '20050524' && password === '123456') {
+                    const clientUsernames = ['15702770259', '19948276026', '15525643206', '15702770417'];
+                    if (clientUsernames.includes(username) && password === '123456') {
                         isValid = true;
                     }
                 }
