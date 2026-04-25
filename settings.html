@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>能回智测平台 - 系统设置</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tech: {
+                            dark: '#050A1F',
+                            darker: '#030818',
+                            primary: '#165DFF',
+                            light: '#4D88FF',
+                            neon: '#00E5FF',
+                            neonGreen: '#00FFAA',
+                            neonYellow: '#FFE500',
+                            neonRed: '#FF3A3A',
+                            gray: '#121A2F',
+                            lightGray: '#94A3B8',
+                            midGray: '#2D3748'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slideIn': 'slideIn 0.6s ease-out',
+                        'blink': 'blink 1.5s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glow { box-shadow: 0 0 20px rgba(22,93,255,0.3); }
+            .glow-neon { box-shadow: 0 0 15px rgba(0,229,255,0.5); }
+            .card-hover { transition: all 0.3s ease; }
+            .card-hover:hover { transform: translateY(-4px); box-shadow: 0 0 25px rgba(0,229,255,0.4); }
+            .btn-hover { transition: all 0.2s ease; }
+            .btn-hover:hover { transform: scale(1.05); }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: '1'; }
+            50% { opacity: '0.5'; }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateX(-20px); opacity: '0'; }
+            100% { transform: translateX(0); opacity: '1'; }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            background: linear-gradient(135deg, #060F24, #121A2F, #060F24);
+            background-size: 200% 200%;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #060F24, #121A2F, #060F24);
+            background-size: 200% 200%;
+        }
+
+        .animate-gradient { animation: gradientShift 8s ease infinite; }
+    </style>
+</head>
+
+<body class="font-inter bg-tech-darker text-white m-0 p-0 min-h-screen overflow-auto relative">
+    <div class="fixed inset-0 z-0 opacity-30 pointer-events-none gradient-bg animate-gradient"></div>
+    <!-- 顶部导航栏 -->
+    <div class="flex items-center justify-between py-3 px-4 bg-tech-dark/80 backdrop-blur-xs border-b border-tech-primary/30 flex-shrink-0 animate-slideIn sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-tech-primary/20 flex items-center justify-center border border-tech-neon glow-neon">
+                <i class="fa fa-bolt text-tech-neon text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-wide m-0">
+                    <span class="text-tech-neon">能回智测</span>
+                    <span class="text-white">系统设置</span>
+                </h1>
+                <p class="text-tech-lightGray text-xs mt-1">新能源汽车电驱系统 | 能量回馈型测试平台</p>
+            </div>
+        </div>
+        
+        <!-- 功能导航菜单 -->
+        <div class="flex items-center gap-2">
+            <button onclick="navigateTo('index.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-gray/50 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="index">
+                <i class="fa fa-dashboard"></i>
+                <span>数据监控</span>
+            </button>
+            <button onclick="navigateTo('device.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-gray/50 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="device">
+                <i class="fa fa-cogs"></i>
+                <span>设备管理</span>
+            </button>
+            <button onclick="navigateTo('alarm.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-gray/50 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="alarm">
+                <i class="fa fa-bell"></i>
+                <span>告警管理</span>
+            </button>
+            <button onclick="navigateTo('user.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-gray/50 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="user">
+                <i class="fa fa-users"></i>
+                <span>用户管理</span>
+            </button>
+            <button onclick="navigateTo('settings.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-primary/20 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="settings">
+                <i class="fa fa-cog"></i>
+                <span>系统设置</span>
+            </button>
+        </div>
+        
+        <!-- 用户信息和登出 -->
+        <div class="flex items-center gap-3 px-3 py-1 rounded-full bg-tech-gray/80 border border-tech-primary/30">
+            <div class="w-8 h-8 rounded-full bg-tech-primary/20 flex items-center justify-center">
+                <i class="fa fa-user text-tech-neon"></i>
+            </div>
+            <div class="text-xs">
+                <div id="userName" class="text-white">管理员</div>
+                <div id="userType" class="text-tech-lightGray">管理员</div>
+            </div>
+            <div id="adminConfigBtn" class="hidden">
+                <button onclick="openAdminConfig()" class="px-2 py-1 rounded bg-tech-neonGreen/20 hover:bg-tech-neonGreen/30 text-tech-neonGreen text-xs transition-colors btn-hover" title="管理员配置">
+                    <i class="fa fa-cog"></i>
+                </button>
+            </div>
+            <button onclick="logout()" class="text-tech-lightGray hover:text-tech-neon transition-colors">
+                <i class="fa fa-sign-out"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 左侧设置分类 -->
+            <div class="lg:col-span-1">
+                <div class="bg-tech-gray/90 rounded-xl p-4 border border-tech-primary/30 glow mb-6">
+                    <h3 class="text-lg font-bold text-tech-neon mb-4">
+                        <i class="fa fa-cog mr-2"></i>设置分类
+                    </h3>
+                    <div class="space-y-2">
+                        <button onclick="showSettings('general')" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-tech-primary/20 text-left transition-colors" data-tab="general">
+                            <i class="fa fa-sliders text-tech-neon"></i>
+                            <span>基本设置</span>
+                        </button>
+                        <button onclick="showSettings('notification')" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-tech-darker text-left transition-colors hover:bg-tech-primary/10" data-tab="notification">
+                            <i class="fa fa-bell text-tech-lightGray"></i>
+                            <span class="text-tech-lightGray">通知设置</span>
+                        </button>
+                        <button onclick="showSettings('security')" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-tech-darker text-left transition-colors hover:bg-tech-primary/10" data-tab="security">
+                            <i class="fa fa-shield text-tech-lightGray"></i>
+                            <span class="text-tech-lightGray">安全设置</span>
+                        </button>
+                        <button onclick="showSettings('backup')" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-tech-darker text-left transition-colors hover:bg-tech-primary/10" data-tab="backup">
+                            <i class="fa fa-database text-tech-lightGray"></i>
+                            <span class="text-tech-lightGray">数据备份</span>
+                        </button>
+                        <button onclick="showSettings('system')" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-tech-darker text-left transition-colors hover:bg-tech-primary/10" data-tab="system">
+                            <i class="fa fa-server text-tech-lightGray"></i>
+                            <span class="text-tech-lightGray">系统信息</span>
+                        </button>
+                        <button onclick="showSettings('wechat')" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-tech-darker text-left transition-colors hover:bg-tech-primary/10" data-tab="wechat">
+                            <i class="fa fa-wechat text-tech-lightGray"></i>
+                            <span class="text-tech-lightGray">公众号推送</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 系统状态 -->
+                <div class="bg-tech-gray/90 rounded-xl p-4 border border-tech-primary/30 glow">
+                    <h3 class="text-lg font-bold text-tech-neon mb-4">
+                        <i class="fa fa-heartbeat mr-2"></i>系统状态
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-tech-lightGray">系统版本</span>
+                            <span class="text-sm text-white">v2.1.0</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-tech-lightGray">运行时间</span>
+                            <span class="text-sm text-white">1286 小时</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-tech-lightGray">最后更新</span>
+                            <span class="text-sm text-white">2026-04-26</span>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-sm mb-2">
+                                <span class="text-tech-lightGray">CPU 使用</span>
+                                <span class="text-tech-neon">18%</span>
+                            </div>
+                            <div class="h-2 bg-tech-darker rounded-full overflow-hidden">
+                                <div class="h-full bg-tech-primary rounded-full" style="width: 18%"></div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="flex items-center justify-between text-sm mb-2">
+                                <span class="text-tech-lightGray">内存使用</span>
+                                <span class="text-tech-neon">42%</span>
+                            </div>
+                            <div class="h-2 bg-tech-darker rounded-full overflow-hidden">
+                                <div class="h-full bg-tech-neon rounded-full" style="width: 42%"></div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="flex items-center justify-between text-sm mb-2">
+                                <span class="text-tech-lightGray">磁盘使用</span>
+                                <span class="text-tech-neon">35%</span>
+                            </div>
+                            <div class="h-2 bg-tech-darker rounded-full overflow-hidden">
+                                <div class="h-full bg-tech-neonGreen rounded-full" style="width: 35%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧设置内容 -->
+            <div class="lg:col-span-2">
+                <!-- 基本设置 -->
+                <div id="general-settings" class="settings-content bg-tech-gray/90 rounded-xl p-6 border border-tech-primary/30 glow mb-6">
+                    <h3 class="text-lg font-bold text-tech-neon mb-4">
+                        <i class="fa fa-sliders mr-2"></i>基本设置
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">系统名称</label>
+                            <input type="text" value="能回智测平台" 
+                                   class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">系统描述</label>
+                            <textarea rows="3" 
+                                      class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">新能源汽车电驱系统能量回馈型测试平台</textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">数据刷新间隔</label>
+                            <select class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                                <option value="1">1秒</option>
+                                <option value="5">5秒</option>
+                                <option value="10" selected>10秒</option>
+                                <option value="30">30秒</option>
+                                <option value="60">1分钟</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">时区设置</label>
+                            <select class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                                <option value="Asia/Shanghai" selected>中国标准时间 (CST)</option>
+                                <option value="UTC">世界协调时间 (UTC)</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-white">启用调试模式</p>
+                                <p class="text-xs text-tech-lightGray">显示详细的调试信息</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-tech-darker rounded-full peer peer-checked:bg-tech-primary after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-white">自动保存数据</p>
+                                <p class="text-xs text-tech-lightGray">定期自动保存系统数据</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-tech-primary rounded-full peer peer-checked:bg-tech-darker after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button onclick="resetSettings()" class="px-4 py-2 rounded bg-tech-midGray hover:bg-tech-gray text-sm transition-colors">
+                            <i class="fa fa-undo mr-1"></i>重置
+                        </button>
+                        <button onclick="saveSettings()" class="px-4 py-2 rounded bg-tech-primary hover:bg-tech-light text-sm transition-colors">
+                            <i class="fa fa-save mr-1"></i>保存设置
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 通知设置 -->
+                <div id="notification-settings" class="settings-content hidden bg-tech-gray/90 rounded-xl p-6 border border-tech-primary/30 glow mb-6">
+                    <h3 class="text-lg font-bold text-tech-neon mb-4">
+                        <i class="fa fa-bell mr-2"></i>通知设置
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-white">邮件通知</p>
+                                <p class="text-xs text-tech-lightGray">接收系统邮件通知</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-tech-primary rounded-full peer peer-checked:bg-tech-darker after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-white">短信通知</p>
+                                <p class="text-xs text-tech-lightGray">接收系统短信通知</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-tech-darker rounded-full peer peer-checked:bg-tech-primary after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-white">浏览器通知</p>
+                                <p class="text-xs text-tech-lightGray">接收浏览器弹窗通知</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-tech-primary rounded-full peer peer-checked:bg-tech-darker after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+                        <hr class="border-tech-primary/30">
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">通知邮箱</label>
+                            <input type="email" value="admin@nenghuizhice.com" 
+                                   class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">通知手机</label>
+                            <input type="tel" value="18335050524" 
+                                   class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">告警阈值</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs text-tech-lightGray mb-1">温度上限 (°C)</label>
+                                    <input type="number" value="80" 
+                                           class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-tech-lightGray mb-1">电压上限 (V)</label>
+                                    <input type="number" value="450" 
+                                           class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button onclick="resetSettings()" class="px-4 py-2 rounded bg-tech-midGray hover:bg-tech-gray text-sm transition-colors">
+                            <i class="fa fa-undo mr-1"></i>重置
+                        </button>
+                        <button onclick="saveSettings()" class="px-4 py-2 rounded bg-tech-primary hover:bg-tech-light text-sm transition-colors">
+                            <i class="fa fa-save mr-1"></i>保存设置
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 安全设置 -->
+                <div id="security-settings" class="settings-content hidden bg-tech-gray/90 rounded-xl p-6 border border-tech-primary/30 glow mb-6">
+                    <h3 class="text-lg font-bold text-tech-neon mb-4">
+                        <i class="fa fa-shield mr-2"></i>安全设置
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">当前密码</label>
+                            <input type="password" placeholder="请输入当前密码" 
+                                   class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white placeholder-tech-lightGray focus:outline-none focus:border-tech-neon">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">新密码</label>
+                            <input type="password" placeholder="请输入新密码" 
+                                   class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white placeholder-tech-lightGray focus:outline-none focus:border-tech-neon">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-2">确认新密码</label>
+                            <input type="password" placeholder="请再次输入新密码" 
+                                   class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white placeholder-tech-lightGray focus:outline-none focus:border-tech-neon">
+                        </div>
+                        <hr class="border-tech-primary/30">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-white">双因素认证</p>
+                                <p class="text-xs text-tech-lightGray">启用额外的身份验证步骤</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-tech-darker rounded-full peer peer-checked:bg-tech-primary after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-white">登录IP限制</p>
+                                <p class="text-xs text-tech-lightGray">限制登录IP地址范围</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-tech-darker rounded-full peer peer-checked:bg-tech-primary after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-white">会话超时</p>
+                                <p class="text-xs text-tech-lightGray">自动退出闲置会话</p>
+                            </div>
+                            <select class="bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                                <option value="15">15分钟</option>
+                                <option value="30" selected>30分钟</option>
+                                <option value="60">1小时</option>
+                                <option value="120">2小时</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button onclick="resetSettings()" class="px-4 py-2 rounded bg-tech-midGray hover:bg-tech-gray text-sm transition-colors">
+                            <i class="fa fa-undo mr-1"></i>重置
+                        </button>
+                        <button onclick="saveSettings()" class="px-4 py-2 rounded bg-tech-primary hover:bg-tech-light text-sm transition-colors">
+                            <i class="fa fa-save mr-1"></i>保存设置
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 数据备份 -->
+                <div id="backup-settings" class="settings-content hidden bg-tech-gray/90 rounded-xl p-6 border border-tech-primary/30 glow mb-6">
+                    <h3 class="text-lg font-bold text-tech-neon mb-4">
+                        <i class="fa fa-database mr-2"></i>数据备份
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-tech-darker rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-tech-primary/20 flex items-center justify-center">
+                                        <i class="fa fa-database text-tech-neon"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-white">自动备份</p>
+                                        <p class="text-xs text-tech-lightGray">每天凌晨 2:00 自动备份</p>
+                                    </div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-tech-primary rounded-full peer peer-checked:bg-tech-darker after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-tech-darker rounded-lg p-4">
+                            <h4 class="text-sm font-medium text-white mb-3">最近备份记录</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between py-2 border-b border-tech-primary/10">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa fa-check-circle text-tech-neonGreen"></i>
+                                        <span class="text-sm text-tech-lightGray">2026-04-26 02:00:00</span>
+                                    </div>
+                                    <span class="text-xs text-tech-lightGray">2.5 GB</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2 border-b border-tech-primary/10">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa fa-check-circle text-tech-neonGreen"></i>
+                                        <span class="text-sm text-tech-lightGray">2026-04-25 02:00:00</span>
+                                    </div>
+                                    <span class="text-xs text-tech-lightGray">2.4 GB</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa fa-check-circle text-tech-neonGreen"></i>
+                                        <span class="text-sm text-tech-lightGray">2026-04-24 02:00:00</span>
+                                    </div>
+                                    <span class="text-xs text-tech-lightGray">2.3 GB</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <button onclick="backupNow()" class="flex-1 px-4 py-3 rounded-lg bg-tech-primary hover:bg-tech-light text-sm transition-colors">
+                                <i class="fa fa-download mr-1"></i>立即备份
+                            </button>
+                            <button onclick="restoreBackup()" class="flex-1 px-4 py-3 rounded-lg bg-tech-neonYellow/20 hover:bg-tech-neonYellow/30 text-tech-neonYellow text-sm transition-colors">
+                                <i class="fa fa-upload mr-1"></i>恢复数据
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 系统信息 -->
+                <div id="system-settings" class="settings-content hidden bg-tech-gray/90 rounded-xl p-6 border border-tech-primary/30 glow">
+                    <h3 class="text-lg font-bold text-tech-neon mb-4">
+                        <i class="fa fa-server mr-2"></i>系统信息
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-tech-darker rounded-lg p-4">
+                            <p class="text-xs text-tech-lightGray mb-1">系统版本</p>
+                            <p class="text-white font-medium">v2.1.0</p>
+                        </div>
+                        <div class="bg-tech-darker rounded-lg p-4">
+                            <p class="text-xs text-tech-lightGray mb-1">构建日期</p>
+                            <p class="text-white font-medium">2026-04-01</p>
+                        </div>
+                        <div class="bg-tech-darker rounded-lg p-4">
+                            <p class="text-xs text-tech-lightGray mb-1">操作系统</p>
+                            <p class="text-white font-medium">Linux x64</p>
+                        </div>
+                        <div class="bg-tech-darker rounded-lg p-4">
+                            <p class="text-xs text-tech-lightGray mb-1">Node.js 版本</p>
+                            <p class="text-white font-medium">v18.17.0</p>
+                        </div>
+                        <div class="bg-tech-darker rounded-lg p-4">
+                            <p class="text-xs text-tech-lightGray mb-1">数据库</p>
+                            <p class="text-white font-medium">MySQL 8.0</p>
+                        </div>
+                        <div class="bg-tech-darker rounded-lg p-4">
+                            <p class="text-xs text-tech-lightGray mb-1">服务器IP</p>
+                            <p class="text-white font-medium">192.168.1.100</p>
+                        </div>
+                        <div class="col-span-2 bg-tech-darker rounded-lg p-4">
+                            <p class="text-xs text-tech-lightGray mb-1">版权所有</p>
+                            <p class="text-white font-medium">© 2026 忻州师范学院 能回智测平台</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button onclick="checkUpdate()" class="px-4 py-2 rounded bg-tech-neonGreen/20 hover:bg-tech-neonGreen/30 text-tech-neonGreen text-sm transition-colors">
+                            <i class="fa fa-refresh mr-1"></i>检查更新
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 公众号推送设置 -->
+                <div id="wechat-settings" class="settings-content hidden bg-tech-gray/90 rounded-xl p-6 border border-tech-primary/30 glow">
+                    <h3 class="text-lg font-bold text-tech-neon mb-4">
+                        <i class="fa fa-wechat mr-2"></i>公众号推送报警设置
+                    </h3>
+                    
+                    <!-- 公众号配置状态 -->
+                    <div class="bg-tech-darker rounded-lg p-4 mb-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full bg-tech-neonGreen/20 flex items-center justify-center">
+                                    <i class="fa fa-check-circle text-tech-neonGreen text-2xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-medium">公众号已绑定</p>
+                                    <p class="text-xs text-tech-lightGray">能回智测平台</p>
+                                </div>
+                            </div>
+                            <button onclick="unbindWeChat()" class="px-4 py-2 rounded bg-tech-neonRed/20 hover:bg-tech-neonRed/30 text-tech-neonRed text-sm transition-colors">
+                                <i class="fa fa-unlink mr-1"></i>解除绑定
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- 启用公众号推送 -->
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-white">启用公众号推送</p>
+                                <p class="text-xs text-tech-lightGray">当系统产生告警时推送至微信公众号</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="wechatPushEnabled" checked class="sr-only peer" onchange="toggleWeChatPush()">
+                                <div class="w-11 h-6 bg-tech-primary rounded-full peer peer-checked:bg-tech-darker after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                            </label>
+                        </div>
+
+                        <hr class="border-tech-primary/30">
+
+                        <!-- 推送类型 -->
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-3">推送告警类型</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <label class="flex items-center gap-2 bg-tech-darker rounded-lg p-3 cursor-pointer hover:bg-tech-primary/10 transition-colors">
+                                    <input type="checkbox" checked class="w-4 h-4 rounded accent-tech-neonRed">
+                                    <span class="text-sm text-white">紧急告警</span>
+                                </label>
+                                <label class="flex items-center gap-2 bg-tech-darker rounded-lg p-3 cursor-pointer hover:bg-tech-primary/10 transition-colors">
+                                    <input type="checkbox" checked class="w-4 h-4 rounded accent-tech-neonYellow">
+                                    <span class="text-sm text-white">预警告警</span>
+                                </label>
+                                <label class="flex items-center gap-2 bg-tech-darker rounded-lg p-3 cursor-pointer hover:bg-tech-primary/10 transition-colors">
+                                    <input type="checkbox" class="w-4 h-4 rounded accent-tech-neonGreen">
+                                    <span class="text-sm text-white">信息提示</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 推送条件 -->
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-3">推送条件</label>
+                            <div class="bg-tech-darker rounded-lg p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-white">温度超限时推送</p>
+                                        <p class="text-xs text-tech-lightGray">当温度超过设定阈值时推送</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" checked class="sr-only peer">
+                                        <div class="w-11 h-6 bg-tech-primary rounded-full peer peer-checked:bg-tech-darker after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-white">电压异常时推送</p>
+                                        <p class="text-xs text-tech-lightGray">当电压超出正常范围时推送</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" checked class="sr-only peer">
+                                        <div class="w-11 h-6 bg-tech-primary rounded-full peer peer-checked:bg-tech-darker after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-white">设备离线时推送</p>
+                                        <p class="text-xs text-tech-lightGray">当设备连接中断时推送</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" checked class="sr-only peer">
+                                        <div class="w-11 h-6 bg-tech-primary rounded-full peer peer-checked:bg-tech-darker after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-white">通讯中断时推送</p>
+                                        <p class="text-xs text-tech-lightGray">当通讯连接中断时推送</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" checked class="sr-only peer">
+                                        <div class="w-11 h-6 bg-tech-primary rounded-full peer peer-checked:bg-tech-darker after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 推送时间设置 -->
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-3">推送时间设置</label>
+                            <div class="bg-tech-darker rounded-lg p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-white">启用推送时间段</p>
+                                        <p class="text-xs text-tech-lightGray">仅在设定时间段内推送告警</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-tech-darker rounded-full peer peer-checked:bg-tech-primary after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                                    </label>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs text-tech-lightGray mb-1">开始时间</label>
+                                        <input type="time" value="08:00" class="w-full bg-tech-gray border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-tech-lightGray mb-1">结束时间</label>
+                                        <input type="time" value="22:00" class="w-full bg-tech-gray border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 告警接收人 -->
+                        <div>
+                            <label class="block text-sm font-medium text-tech-lightGray mb-3">告警接收人</label>
+                            <div class="bg-tech-darker rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-tech-primary/20 flex items-center justify-center">
+                                            <i class="fa fa-user text-tech-neon text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-white">张三 (管理员)</p>
+                                            <p class="text-xs text-tech-lightGray">183****0524</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-1 rounded-full bg-tech-neonGreen/20 text-tech-neonGreen text-xs">已开启</span>
+                                </div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-tech-neonGreen/20 flex items-center justify-center">
+                                            <i class="fa fa-user text-tech-neonGreen text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-white">李四</p>
+                                            <p class="text-xs text-tech-lightGray">157****0259</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-1 rounded-full bg-tech-neonGreen/20 text-tech-neonGreen text-xs">已开启</span>
+                                </div>
+                                <button onclick="addReceiver()" class="w-full mt-2 px-4 py-2 rounded-lg border border-dashed border-tech-primary/30 hover:border-tech-primary text-sm text-tech-lightGray hover:text-tech-neon transition-colors">
+                                    <i class="fa fa-plus mr-1"></i>添加接收人
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-between">
+                        <button onclick="testWeChatPush()" class="px-4 py-2 rounded bg-tech-neonYellow/20 hover:bg-tech-neonYellow/30 text-tech-neonYellow text-sm transition-colors">
+                            <i class="fa fa-paper-plane mr-1"></i>发送测试消息
+                        </button>
+                        <div class="flex gap-3">
+                            <button onclick="resetSettings()" class="px-4 py-2 rounded bg-tech-midGray hover:bg-tech-gray text-sm transition-colors">
+                                <i class="fa fa-undo mr-1"></i>重置
+                            </button>
+                            <button onclick="saveSettings()" class="px-4 py-2 rounded bg-tech-primary hover:bg-tech-light text-sm transition-colors">
+                                <i class="fa fa-save mr-1"></i>保存设置
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 推送记录 -->
+                    <div class="mt-6">
+                        <h4 class="text-sm font-medium text-white mb-3">
+                            <i class="fa fa-history mr-2"></i>最近推送记录
+                        </h4>
+                        <div class="bg-tech-darker rounded-lg p-4 space-y-3">
+                            <div class="flex items-start gap-3 pb-3 border-b border-tech-primary/10">
+                                <div class="w-8 h-8 rounded-full bg-tech-neonRed/20 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-bell text-tech-neonRed text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-0.5 rounded-full bg-tech-neonRed/20 text-tech-neonRed text-xs">紧急</span>
+                                        <span class="text-xs text-tech-lightGray">2026-04-26 14:35:20</span>
+                                    </div>
+                                    <p class="text-sm text-white mt-1">电机温度超限</p>
+                                    <p class="text-xs text-tech-lightGray">驱动电机 #1 温度达到 85°C</p>
+                                </div>
+                                <span class="text-xs text-tech-neonGreen"><i class="fa fa-check-circle mr-1"></i>已送达</span>
+                            </div>
+                            <div class="flex items-start gap-3 pb-3 border-b border-tech-primary/10">
+                                <div class="w-8 h-8 rounded-full bg-tech-neonYellow/20 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-bell text-tech-neonYellow text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-0.5 rounded-full bg-tech-neonYellow/20 text-tech-neonYellow text-xs">预警</span>
+                                        <span class="text-xs text-tech-lightGray">2026-04-26 14:25:30</span>
+                                    </div>
+                                    <p class="text-sm text-white mt-1">电池SOC低于20%</p>
+                                    <p class="text-xs text-tech-lightGray">电池管理系统当前SOC为 18%</p>
+                                </div>
+                                <span class="text-xs text-tech-neonGreen"><i class="fa fa-check-circle mr-1"></i>已送达</span>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-tech-primary/20 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-bell text-tech-neon text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-0.5 rounded-full bg-tech-primary/20 text-tech-neon text-xs">信息</span>
+                                        <span class="text-xs text-tech-lightGray">2026-04-26 14:15:00</span>
+                                    </div>
+                                    <p class="text-sm text-white mt-1">能量回馈效率达到92.5%</p>
+                                    <p class="text-xs text-tech-lightGray">本次测试能量回馈效率优秀</p>
+                                </div>
+                                <span class="text-xs text-tech-lightGray"><i class="fa fa-clock mr-1"></i>已阅读</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息框 -->
+    <div id="messageBox" class="fixed top-4 right-4 z-50 hidden">
+        <div class="bg-tech-gray border border-tech-primary rounded-lg p-4 shadow-lg animate-slideIn" style="max-width: 300px;">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <i id="messageIcon" class="fa text-xl"></i>
+                </div>
+                <div class="ml-3 flex-1">
+                    <h3 id="messageTitle" class="text-sm font-medium text-white"></h3>
+                    <div id="messageContent" class="mt-1 text-sm text-tech-lightGray"></div>
+                </div>
+                <button onclick="closeMessage()" class="ml-4 flex-shrink-0 text-tech-lightGray hover:text-white">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 微信绑定对话框 -->
+    <div id="wechatBindDialog" class="fixed inset-0 z-50 hidden items-center justify-center bg-tech-darker/80 backdrop-blur-sm">
+        <div class="bg-tech-gray rounded-xl p-6 max-w-md w-full mx-4 animate-slideIn border border-tech-primary/30">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-tech-neon">
+                    <i class="fa fa-wechat mr-2"></i>绑定微信公众号
+                </h3>
+                <button onclick="closeWeChatBindDialog()" class="text-tech-lightGray hover:text-white">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-tech-lightGray mb-2">AppID</label>
+                    <input type="text" id="wechatAppId" placeholder="请输入微信公众号AppID" class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-3 text-white placeholder-tech-lightGray focus:outline-none focus:border-tech-neon">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-tech-lightGray mb-2">AppSecret</label>
+                    <input type="password" id="wechatAppSecret" placeholder="请输入微信公众号AppSecret" class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-3 text-white placeholder-tech-lightGray focus:outline-none focus:border-tech-neon">
+                </div>
+                <div class="bg-tech-darker/50 rounded-lg p-3 text-xs text-tech-lightGray">
+                    <p><i class="fa fa-info-circle mr-1"></i>如何获取AppID和AppSecret？</p>
+                    <p class="mt-2">1. 登录 <a href="https://mp.weixin.qq.com/" target="_blank" class="text-tech-neon hover:underline">微信公众平台</a></p>
+                    <p>2. 进入 设置与开发 → 基本配置</p>
+                    <p>3. 获取 AppID 和 AppSecret</p>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button onclick="closeWeChatBindDialog()" class="px-4 py-2 rounded bg-tech-midGray hover:bg-tech-gray text-sm transition-colors">
+                    取消
+                </button>
+                <button onclick="bindWeChat()" class="px-4 py-2 rounded bg-tech-primary hover:bg-tech-light text-sm transition-colors">
+                    <i class="fa fa-link mr-1"></i>确认绑定
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        // 显示用户信息
+        function displayUserInfo() {
+            const username = localStorage.getItem('username') || '管理员';
+            const userType = localStorage.getItem('userType') || 'admin';
+            
+            document.getElementById('userName').textContent = username;
+            document.getElementById('userType').textContent = userType === 'admin' ? '管理员' : '客户';
+        }
+
+        // 页面导航
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // 登出
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'login.html';
+        }
+
+        // 加载管理员配置到客户端视图
+        function loadAdminConfig() {
+            const configData = JSON.parse(localStorage.getItem('adminConfig') || '{}');
+            const userType = localStorage.getItem('userType') || 'admin';
+
+            if (userType !== 'admin') {
+                document.getElementById('adminConfigBtn').classList.add('hidden');
+            } else {
+                document.getElementById('adminConfigBtn').classList.remove('hidden');
+            }
+        }
+
+        // 打开管理员配置对话框
+        function openAdminConfig() {
+            const configData = JSON.parse(localStorage.getItem('adminConfig') || '{}');
+
+            const dialog = document.createElement('div');
+            dialog.className = 'fixed inset-0 z-50 flex items-center justify-center bg-tech-darker/80 backdrop-blur-sm';
+            dialog.innerHTML = `
+                <div class="bg-tech-gray rounded-xl p-6 max-w-2xl w-full mx-4 animate-slideIn border border-tech-primary/30 max-h-[90vh] overflow-y-auto">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-tech-neon">
+                            <i class="fa fa-cog mr-2"></i>管理员配置
+                        </h3>
+                        <button onclick="closeAdminConfig()" class="text-tech-lightGray hover:text-white">
+                            <i class="fa fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-tech-darker rounded-lg p-4 border border-tech-primary/20">
+                            <h4 class="text-lg font-bold text-tech-neon mb-3 flex items-center">
+                                <i class="fa fa-cogs mr-2"></i>设备参数阈值
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">最高温度阈值</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="config_max_temp" value="${configData.maxTemp || 80}" class="w-20 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">°C</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">最高电压阈值</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="config_max_volt" value="${configData.maxVolt || 420}" class="w-20 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">V</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">最低电压阈值</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="config_min_volt" value="${configData.minVolt || 280}" class="w-20 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">V</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">最高电流阈值</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="config_max_curr" value="${configData.maxCurr || 200}" class="w-20 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">A</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-tech-darker rounded-lg p-4 border border-tech-primary/20">
+                            <h4 class="text-lg font-bold text-tech-neon mb-3 flex items-center">
+                                <i class="fa fa-bell mr-2"></i>报警规则配置
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">温度报警</label>
+                                    <select id="config_temp_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.tempAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.tempAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">电压报警</label>
+                                    <select id="config_volt_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.voltAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.voltAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">电流报警</label>
+                                    <select id="config_curr_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.currAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.currAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">离线报警</label>
+                                    <select id="config_offline_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.offlineAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.offlineAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-tech-darker rounded-lg p-4 border border-tech-primary/20">
+                            <h4 class="text-lg font-bold text-tech-neon mb-3 flex items-center">
+                                <i class="fa fa-users mr-2"></i>客户端权限配置
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">允许查看数据</label>
+                                    <select id="config_view_data" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.viewData !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.viewData === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">允许查看报警</label>
+                                    <select id="config_view_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.viewAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.viewAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">允许接收推送</label>
+                                    <select id="config_push" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.push !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.push === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-tech-darker rounded-lg p-4 border border-tech-primary/20">
+                            <h4 class="text-lg font-bold text-tech-neon mb-3 flex items-center">
+                                <i class="fa fa-wechat mr-2"></i>推送配置
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">推送时间段</label>
+                                    <div class="flex items-center gap-1">
+                                        <input type="number" id="config_push_start" value="${configData.pushStart || 8}" min="0" max="23" class="w-12 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray">-</span>
+                                        <input type="number" id="config_push_end" value="${configData.pushEnd || 22}" min="0" max="23" class="w-12 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">时</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">紧急告警即时推送</label>
+                                    <select id="config_critical_push" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.criticalPush !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.criticalPush === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button onclick="closeAdminConfig()" class="px-4 py-2 rounded bg-tech-midGray hover:bg-tech-gray transition-colors btn-hover">取消</button>
+                        <button onclick="syncConfigToClients()" class="px-4 py-2 rounded bg-tech-primary hover:bg-tech-light transition-colors btn-hover">
+                            <i class="fa fa-sync mr-1"></i>保存并同步
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(dialog);
+        }
+
+        // 关闭管理员配置对话框
+        function closeAdminConfig() {
+            const dialog = document.querySelector('.fixed.inset-0.z-50');
+            if (dialog) {
+                dialog.remove();
+            }
+        }
+
+        // 同步配置到客户端
+        function syncConfigToClients() {
+            const configData = {
+                maxTemp: parseInt(document.getElementById('config_max_temp').value) || 80,
+                maxVolt: parseInt(document.getElementById('config_max_volt').value) || 420,
+                minVolt: parseInt(document.getElementById('config_min_volt').value) || 280,
+                maxCurr: parseInt(document.getElementById('config_max_curr').value) || 200,
+                commTimeout: parseInt(document.getElementById('config_comm_timeout')?.value) || 30,
+                tempAlarm: document.getElementById('config_temp_alarm').value,
+                voltAlarm: document.getElementById('config_volt_alarm').value,
+                currAlarm: document.getElementById('config_curr_alarm').value,
+                offlineAlarm: document.getElementById('config_offline_alarm').value,
+                commAlarm: document.getElementById('config_comm_alarm')?.value,
+                viewData: document.getElementById('config_view_data').value,
+                viewAlarm: document.getElementById('config_view_alarm').value,
+                push: document.getElementById('config_push').value,
+                export: document.getElementById('config_export')?.value,
+                pushStart: parseInt(document.getElementById('config_push_start').value) || 8,
+                pushEnd: parseInt(document.getElementById('config_push_end').value) || 22,
+                criticalPush: document.getElementById('config_critical_push').value,
+                dailyPush: document.getElementById('config_daily_push')?.value,
+                lastUpdate: new Date().toISOString()
+            };
+
+            localStorage.setItem('adminConfig', JSON.stringify(configData));
+            closeAdminConfig();
+            showMessage('配置已保存', '配置已保存并同步到所有客户端', 'success');
+        }
+
+        // 显示消息框
+        function showMessage(title, message, type = 'info') {
+            const messageBox = document.getElementById('messageBox');
+            const messageIcon = document.getElementById('messageIcon');
+            const messageTitle = document.getElementById('messageTitle');
+            const messageContent = document.getElementById('messageContent');
+
+            messageIcon.className = 'fa';
+            if (type === 'success') {
+                messageIcon.classList.add('fa-check-circle', 'text-tech-neonGreen');
+            } else if (type === 'error') {
+                messageIcon.classList.add('fa-exclamation-circle', 'text-tech-neonRed');
+            } else {
+                messageIcon.classList.add('fa-info-circle', 'text-tech-neon');
+            }
+
+            messageTitle.textContent = title;
+            messageContent.textContent = message;
+            messageBox.classList.remove('hidden');
+
+            setTimeout(() => {
+                closeMessage();
+            }, 3000);
+        }
+
+        // 关闭消息框
+        function closeMessage() {
+            document.getElementById('messageBox').classList.add('hidden');
+        }
+
+        // 显示设置内容
+        function showSettings(tab) {
+            // 隐藏所有设置内容
+            document.querySelectorAll('.settings-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // 显示选中的设置内容
+            document.getElementById(tab + '-settings').classList.remove('hidden');
+
+            // 更新标签样式
+            document.querySelectorAll('.settings-tab').forEach(tabBtn => {
+                if (tabBtn.dataset.tab === tab) {
+                    tabBtn.classList.remove('bg-tech-darker', 'text-tech-lightGray');
+                    tabBtn.classList.add('bg-tech-primary/20');
+                    tabBtn.querySelector('i').classList.remove('text-tech-lightGray');
+                    tabBtn.querySelector('span').classList.remove('text-tech-lightGray');
+                } else {
+                    tabBtn.classList.remove('bg-tech-primary/20');
+                    tabBtn.classList.add('bg-tech-darker', 'text-tech-lightGray');
+                    tabBtn.querySelector('i').classList.add('text-tech-lightGray');
+                    tabBtn.querySelector('span').classList.add('text-tech-lightGray');
+                }
+            });
+        }
+
+        // 保存设置
+        function saveSettings() {
+            showMessage('保存成功', '设置已成功保存', 'success');
+        }
+
+        // 重置设置
+        function resetSettings() {
+            showMessage('重置成功', '设置已重置为默认值', 'success');
+        }
+
+        // 立即备份
+        function backupNow() {
+            showMessage('备份中', '正在创建备份，请稍候...', 'info');
+            setTimeout(() => {
+                showMessage('备份成功', '数据已成功备份', 'success');
+            }, 2000);
+        }
+
+        // 显示微信绑定对话框
+        function showWeChatBindDialog() {
+            const dialog = document.getElementById('wechatBindDialog');
+            dialog.classList.remove('hidden');
+            dialog.classList.add('flex');
+        }
+
+        // 关闭微信绑定对话框
+        function closeWeChatBindDialog() {
+            const dialog = document.getElementById('wechatBindDialog');
+            dialog.classList.add('hidden');
+            dialog.classList.remove('flex');
+            document.getElementById('wechatAppId').value = '';
+            document.getElementById('wechatAppSecret').value = '';
+        }
+
+        // 绑定微信公众号
+        function bindWeChat() {
+            const appId = document.getElementById('wechatAppId').value.trim();
+            const appSecret = document.getElementById('wechatAppSecret').value.trim();
+
+            if (!appId || !appSecret) {
+                showMessage('绑定失败', '请输入完整的AppID和AppSecret', 'error');
+                return;
+            }
+
+            if (appId.length < 10 || appSecret.length < 10) {
+                showMessage('绑定失败', 'AppID或AppSecret格式不正确', 'error');
+                return;
+            }
+
+            showMessage('绑定中', '正在验证微信公众号信息...', 'info');
+
+            setTimeout(() => {
+                localStorage.setItem('wechatAppId', appId);
+                localStorage.setItem('wechatAppSecret', appSecret);
+                localStorage.setItem('wechatBound', 'true');
+
+                closeWeChatBindDialog();
+                updateWeChatBindStatus();
+                showMessage('绑定成功', '微信公众号绑定成功', 'success');
+            }, 1500);
+        }
+
+        // 更新微信绑定状态显示
+        function updateWeChatBindStatus() {
+            const isBound = localStorage.getItem('wechatBound') === 'true';
+            const appId = localStorage.getItem('wechatAppId') || '';
+
+            const bindIconContainer = document.getElementById('bindIconContainer');
+            const bindStatusIcon = document.getElementById('bindStatusIcon');
+            const bindStatusText = document.getElementById('bindStatusText');
+            const bindStatusDesc = document.getElementById('bindStatusDesc');
+            const bindBtn = document.getElementById('bindBtn');
+            const configArea = document.getElementById('wechatConfigArea');
+            const actionArea = document.getElementById('wechatActionArea');
+            const displayAppId = document.getElementById('displayAppId');
+
+            if (isBound && appId) {
+                bindIconContainer.className = 'w-12 h-12 rounded-full bg-tech-neonGreen/20 flex items-center justify-center';
+                bindStatusIcon.className = 'fa fa-check-circle text-tech-neonGreen text-2xl';
+                bindStatusText.textContent = '公众号已绑定';
+                bindStatusDesc.textContent = 'AppID: ' + appId.substring(0, 8) + '****';
+                bindBtn.innerHTML = '<i class="fa fa-unlink mr-1"></i>解除绑定';
+                bindBtn.className = 'px-4 py-2 rounded bg-tech-neonRed/20 hover:bg-tech-neonRed/30 text-tech-neonRed text-sm transition-colors';
+                bindBtn.onclick = unbindWeChat;
+                configArea.classList.remove('hidden');
+                actionArea.classList.remove('hidden');
+                if (displayAppId) {
+                    displayAppId.textContent = appId;
+                }
+            } else {
+                bindIconContainer.className = 'w-12 h-12 rounded-full bg-tech-gray flex items-center justify-center';
+                bindStatusIcon.className = 'fa fa-times-circle text-tech-gray text-2xl';
+                bindStatusText.textContent = '公众号未绑定';
+                bindStatusDesc.textContent = '请输入AppID和AppSecret进行绑定';
+                bindBtn.innerHTML = '<i class="fa fa-link mr-1"></i>立即绑定';
+                bindBtn.className = 'px-4 py-2 rounded bg-tech-primary hover:bg-tech-light text-sm transition-colors';
+                bindBtn.onclick = showWeChatBindDialog;
+                configArea.classList.add('hidden');
+                actionArea.classList.add('hidden');
+            }
+        }
+
+        // 解除公众号绑定
+        function unbindWeChat() {
+            if (confirm('确定要解除公众号绑定吗？解绑后将无法接收推送消息。')) {
+                localStorage.removeItem('wechatAppId');
+                localStorage.removeItem('wechatAppSecret');
+                localStorage.removeItem('wechatBound');
+                updateWeChatBindStatus();
+                showMessage('解除绑定', '公众号已解除绑定', 'success');
+            }
+        }
+
+        // 添加接收人
+        function addReceiver() {
+            showMessage('添加接收人', '请在用户管理中添加接收人', 'info');
+        }
+
+        // 发送测试消息
+        function testWeChatPush() {
+            const isBound = localStorage.getItem('wechatBound') === 'true';
+            if (!isBound) {
+                showMessage('发送失败', '请先绑定微信公众号', 'error');
+                return;
+            }
+
+            showMessage('发送中', '正在发送测试消息...', 'info');
+
+            setTimeout(() => {
+                const now = new Date();
+                const timeStr = now.getFullYear() + '-' + 
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(now.getDate()).padStart(2, '0') + ' ' + 
+                    String(now.getHours()).padStart(2, '0') + ':' + 
+                    String(now.getMinutes()).padStart(2, '0') + ':' + 
+                    String(now.getSeconds()).padStart(2, '0');
+
+                const pushRecord = {
+                    type: 'info',
+                    title: '测试消息',
+                    content: '这是一条测试消息，用于验证推送功能',
+                    time: timeStr,
+                    status: '已送达'
+                };
+
+                savePushRecord(pushRecord);
+                showMessage('发送成功', '测试消息已发送，请注意查收', 'success');
+            }, 2000);
+        }
+
+        // 保存推送记录
+        function savePushRecord(record) {
+            let pushHistory = JSON.parse(localStorage.getItem('pushHistory') || '[]');
+            pushHistory.unshift(record);
+            if (pushHistory.length > 10) {
+                pushHistory = pushHistory.slice(0, 10);
+            }
+            localStorage.setItem('pushHistory', JSON.stringify(pushHistory));
+            updatePushHistory();
+        }
+
+        // 更新推送记录显示
+        function updatePushHistory() {
+            const pushHistory = JSON.parse(localStorage.getItem('pushHistory') || '[]');
+            const container = document.getElementById('pushHistoryList');
+
+            if (pushHistory.length === 0) {
+                container.innerHTML = '<div class="text-center py-4 text-tech-lightGray text-sm"><i class="fa fa-inbox text-2xl mb-2"></i><p>暂无推送记录</p></div>';
+                return;
+            }
+
+            let html = '';
+            pushHistory.forEach(record => {
+                const typeColors = {
+                    'critical': 'tech-neonRed',
+                    'warning': 'tech-neonYellow',
+                    'info': 'tech-neon'
+                };
+                const typeText = {
+                    'critical': '紧急',
+                    'warning': '预警',
+                    'info': '信息'
+                };
+
+                html += '<div class="flex items-start gap-3 pb-3 border-b border-tech-primary/10">' +
+                    '<div class="w-8 h-8 rounded-full bg-' + typeColors[record.type] + '/20 flex items-center justify-center flex-shrink-0">' +
+                    '<i class="fa fa-bell text-' + typeColors[record.type] + ' text-sm"></i></div>' +
+                    '<div class="flex-1"><div class="flex items-center gap-2">' +
+                    '<span class="px-2 py-0.5 rounded-full bg-' + typeColors[record.type] + '/20 text-' + typeColors[record.type] + ' text-xs">' + typeText[record.type] + '</span>' +
+                    '<span class="text-xs text-tech-lightGray">' + record.time + '</span></div>' +
+                    '<p class="text-sm text-white mt-1">' + record.title + '</p>' +
+                    '<p class="text-xs text-tech-lightGray">' + record.content + '</p></div>' +
+                    '<span class="text-xs text-tech-neonGreen"><i class="fa fa-check-circle mr-1"></i>' + record.status + '</span></div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 恢复数据
+        function restoreBackup() {
+            showMessage('恢复数据', '正在从备份恢复数据...', 'info');
+            setTimeout(() => {
+                showMessage('恢复成功', '数据已成功恢复', 'success');
+            }, 2000);
+        }
+
+        // 检查更新
+        function checkUpdate() {
+            showMessage('检查更新', '正在检查系统更新...', 'info');
+            setTimeout(() => {
+                showMessage('已是最新版本', '当前系统版本已是最新', 'success');
+            }, 2000);
+        }
+
+        // 切换公众号推送
+        function toggleWeChatPush() {
+            const enabled = document.getElementById('wechatPushEnabled').checked;
+            if (enabled) {
+                showMessage('推送已开启', '公众号推送功能已启用', 'success');
+            } else {
+                showMessage('推送已关闭', '公众号推送功能已停用', 'info');
+            }
+        }
+
+        // 页面加载时初始化
+        window.onload = function() {
+            checkLoginStatus();
+            displayUserInfo();
+            loadAdminConfig();
+            updateWeChatBindStatus();
+            updatePushHistory();
+            showMessage('欢迎', '欢迎使用系统设置模块', 'success');
+        };
+    </script>
+</body>
+</html>

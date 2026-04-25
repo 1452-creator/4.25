@@ -322,58 +322,60 @@
         function setupFormSubmission() {
             const loginForm = document.getElementById('login-form');
             const adminTab = document.getElementById('admin-tab');
-            
+            const clientTab = document.getElementById('client-tab');
+
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                
-                const username = document.getElementById('username').value;
+
+                const username = document.getElementById('username').value.trim();
                 const password = document.getElementById('password').value;
                 const rememberMe = document.getElementById('remember-me').checked;
                 const isAdmin = adminTab.classList.contains('tab-active');
-                
-                // simple validation
+
                 if (!username || !password) {
-                    alert('请输入用户名和密码');
+                    showMessage('登录失败', '请输入用户名和密码', 'error');
                     return;
                 }
-                
-                // 验证账号密码
+
                 let isValid = false;
+                let userData = null;
+
                 if (isAdmin) {
-                    // 管理员账号验证
-                    if (username === '18335050524' && password === '123456') {
-                        isValid = true;
-                    }
+                    const adminUsers = JSON.parse(localStorage.getItem('adminUsers') || '[]');
+                    console.log('Admin users:', adminUsers);
+                    userData = adminUsers.find(u => u.username === username && u.password === password);
+                    if (userData) isValid = true;
                 } else {
-                    // 客户端账号验证
-                    const clientUsernames = ['15702770259', '19948276026', '15525643206', '15702770417'];
-                    if (clientUsernames.includes(username) && password === '123456') {
-                        isValid = true;
-                    }
+                    const clientUsers = JSON.parse(localStorage.getItem('clientUsers') || '[]');
+                    console.log('Client users:', clientUsers);
+                    userData = clientUsers.find(u => u.username === username && u.password === password);
+                    if (userData) isValid = true;
                 }
-                
+
+                console.log('Login attempt:', { username, isAdmin, isValid, userData });
+
                 if (!isValid) {
-                    alert('用户名或密码错误');
+                    showMessage('登录失败', `用户名或密码错误 (${isAdmin ? '管理员' : '客户'}模式)`, 'error');
                     return;
                 }
-                
-                // 保存登录信息
+
                 if (rememberMe) {
                     const key = isAdmin ? 'admin_credentials' : 'client_credentials';
                     localStorage.setItem(key, JSON.stringify({ username, password }));
                 } else {
-                    // 清除保存的登录信息
                     const key = isAdmin ? 'admin_credentials' : 'client_credentials';
                     localStorage.removeItem(key);
                 }
-                
-                // 登录成功
+
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userType', isAdmin ? 'admin' : 'client');
                 localStorage.setItem('username', username);
-                
-                // redirect to main page after login
-                window.location.href = 'index.html';
+                localStorage.setItem('userPhone', userData.phone || username);
+
+                showMessage('登录成功', '正在跳转...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 500);
             });
         }
 
@@ -474,14 +476,49 @@
             setupFormSubmission();
             document.getElementById('toggle-password').addEventListener('click', togglePassword);
             setupButtonFunctions();
-            // 加载客户端的保存信息
+            forceInitUsers();
             loadSavedCredentials(true);
-            
-            // 显示欢迎消息
+
             setTimeout(() => {
                 showMessage('欢迎', '欢迎使用能回智测平台', 'success');
             }, 1000);
+
+            console.log('=== 登录调试信息 ===');
+            console.log('管理员账号: 18335050524 / 123456');
+            console.log('客户账号: 15702770259 / 123456');
         });
+
+        // 强制初始化用户数据
+        function forceInitUsers() {
+            const adminUsers = [
+                { username: '18335050524', password: '123456', name: '张三', phone: '18335050524', isSuperAdmin: true }
+            ];
+            const clientUsers = [
+                { username: '15702770259', password: '123456', name: '李四', phone: '15702770259' },
+                { username: '19948276026', password: '123456', name: '王五', phone: '19948276026' },
+                { username: '15525643206', password: '123456', name: '赵六', phone: '15525643206' },
+                { username: '15702770417', password: '123456', name: '钱七', phone: '15702770417' }
+            ];
+            const users = [
+                { id: 1, name: '张三', type: '管理员', phone: '18335050524', email: 'admin@nenghuizhice.com', password: '123456', status: '离线', loginCount: 0, lastLogin: '从未登录' },
+                { id: 2, name: '李四', type: '普通用户', phone: '15702770259', email: 'user1@nenghuizhice.com', password: '123456', status: '离线', loginCount: 0, lastLogin: '从未登录' },
+                { id: 3, name: '王五', type: '普通用户', phone: '19948276026', email: 'user2@nenghuizhice.com', password: '123456', status: '离线', loginCount: 0, lastLogin: '从未登录' },
+                { id: 4, name: '赵六', type: '普通用户', phone: '15525643206', email: 'user3@nenghuizhice.com', password: '123456', status: '离线', loginCount: 0, lastLogin: '从未登录' },
+                { id: 5, name: '钱七', type: '普通用户', phone: '15702770417', email: 'user4@nenghuizhice.com', password: '123456', status: '离线', loginCount: 0, lastLogin: '从未登录' }
+            ];
+            localStorage.setItem('adminUsers', JSON.stringify(adminUsers));
+            localStorage.setItem('clientUsers', JSON.stringify(clientUsers));
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('数据已初始化! adminUsers: ' + localStorage.getItem('adminUsers'));
+        }
+
+        // 强制重置用户数据（供调试使用）
+        function resetUserData() {
+            forceInitUsers();
+            location.reload();
+        }
+
+        
     </script>
 </body>
 </html>

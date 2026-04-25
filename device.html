@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>能回智测平台 - 设备管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tech: {
+                            dark: '#050A1F',
+                            darker: '#030818',
+                            primary: '#165DFF',
+                            light: '#4D88FF',
+                            neon: '#00E5FF',
+                            neonGreen: '#00FFAA',
+                            neonYellow: '#FFE500',
+                            neonRed: '#FF3A3A',
+                            gray: '#121A2F',
+                            lightGray: '#94A3B8',
+                            midGray: '#2D3748'
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'slideIn': 'slideIn 0.6s ease-out',
+                        'numberJump': 'numberJump 1.2s ease-in-out infinite',
+                        'rotateSlow': 'rotate 12s linear infinite',
+                        'blink': 'blink 1.5s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-grid { background-image: radial-gradient(rgba(22,93,255,0.1) 1px, transparent 1px); background-size: 30px 30px; }
+            .glow { box-shadow: 0 0 20px rgba(22,93,255,0.3); }
+            .glow-neon { box-shadow: 0 0 15px rgba(0,229,255,0.5); }
+            .text-shadow { text-shadow: 0 0 10px rgba(0,229,255,0.8); }
+            .card-hover { transition: all 0.3s ease; }
+            .card-hover:hover { transform: translateY(-4px); box-shadow: 0 0 25px rgba(0,229,255,0.4); }
+            .btn-hover { transition: all 0.2s ease; }
+            .btn-hover:hover { transform: scale(1.05); }
+            .animate-gradient { animation: gradientShift 8s ease infinite; }
+        }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes numberJump {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        .animate-number { animation: numberJump 1.5s ease-in-out infinite; }
+        .animate-blink { animation: blink 1.5s ease-in-out infinite; }
+
+        @keyframes blink {
+            0%, 100% { opacity: '1'; }
+            50% { opacity: '0.5'; }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateX(-20px); opacity: '0'; }
+            100% { transform: translateX(0); opacity: '1'; }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            background: linear-gradient(135deg, #060F24, #121A2F, #060F24);
+            background-size: 200% 200%;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #060F24, #121A2F, #060F24);
+            background-size: 200% 200%;
+        }
+    </style>
+</head>
+
+<body class="font-inter bg-tech-darker text-white m-0 p-0 min-h-screen overflow-auto relative">
+    <div class="fixed inset-0 z-0 opacity-30 pointer-events-none gradient-bg animate-gradient"></div>
+    <!-- 顶部导航栏 -->
+    <div class="flex items-center justify-between py-3 px-4 bg-tech-dark/80 backdrop-blur-xs border-b border-tech-primary/30 flex-shrink-0 animate-slideIn sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-tech-primary/20 flex items-center justify-center border border-tech-neon glow-neon">
+                <i class="fa fa-bolt text-tech-neon text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-wide m-0 text-shadow">
+                    <span class="text-tech-neon">能回智测</span>
+                    <span class="text-white">设备管理</span>
+                </h1>
+                <p class="text-tech-lightGray text-xs mt-1">新能源汽车电驱系统 | 能量回馈型测试平台</p>
+            </div>
+        </div>
+        
+        <!-- 功能导航菜单 -->
+        <div class="flex items-center gap-2">
+            <button onclick="navigateTo('index.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-gray/50 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="index">
+                <i class="fa fa-dashboard"></i>
+                <span>数据监控</span>
+            </button>
+            <button onclick="navigateTo('device.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-primary/20 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="device">
+                <i class="fa fa-cogs"></i>
+                <span>设备管理</span>
+            </button>
+            <button onclick="navigateTo('alarm.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-gray/50 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="alarm">
+                <i class="fa fa-bell"></i>
+                <span>告警管理</span>
+            </button>
+            <button onclick="navigateTo('user.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-gray/50 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="user">
+                <i class="fa fa-users"></i>
+                <span>用户管理</span>
+            </button>
+            <button onclick="navigateTo('settings.html')" class="nav-btn px-4 py-2 rounded-lg bg-tech-gray/50 hover:bg-tech-primary/30 text-sm transition-colors btn-hover flex items-center gap-2" data-page="settings">
+                <i class="fa fa-cog"></i>
+                <span>系统设置</span>
+            </button>
+        </div>
+        
+        <!-- 用户信息和登出 -->
+        <div class="flex items-center gap-3 px-3 py-1 rounded-full bg-tech-gray/80 border border-tech-primary/30">
+            <div class="w-8 h-8 rounded-full bg-tech-primary/20 flex items-center justify-center">
+                <i class="fa fa-user text-tech-neon"></i>
+            </div>
+            <div class="text-xs">
+                <div id="userName" class="text-white">管理员</div>
+                <div id="userType" class="text-tech-lightGray">管理员</div>
+            </div>
+            <div id="adminConfigBtn" class="hidden">
+                <button onclick="openAdminConfig()" class="px-2 py-1 rounded bg-tech-neonGreen/20 hover:bg-tech-neonGreen/30 text-tech-neonGreen text-xs transition-colors btn-hover" title="管理员配置">
+                    <i class="fa fa-cog"></i>
+                </button>
+            </div>
+            <button onclick="logout()" class="text-tech-lightGray hover:text-tech-neon transition-colors">
+                <i class="fa fa-sign-out"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="p-6">
+        <!-- 统计概览 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-tech-gray/90 rounded-xl p-4 border border-tech-primary/30 glow card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-tech-lightGray text-sm">设备总数</p>
+                        <p class="text-3xl font-bold text-tech-neon mt-1">28</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-tech-primary/20 flex items-center justify-center">
+                        <i class="fa fa-cogs text-tech-neon text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-2 flex items-center text-sm">
+                    <span class="text-tech-neonGreen"><i class="fa fa-arrow-up mr-1"></i>12%</span>
+                    <span class="text-tech-lightGray ml-2">较上月</span>
+                </div>
+            </div>
+
+            <div class="bg-tech-gray/90 rounded-xl p-4 border border-tech-primary/30 glow card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-tech-lightGray text-sm">在线设备</p>
+                        <p class="text-3xl font-bold text-tech-neonGreen mt-1">25</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-tech-neonGreen/20 flex items-center justify-center">
+                        <i class="fa fa-check-circle text-tech-neonGreen text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-2 flex items-center text-sm">
+                    <span class="text-tech-neonGreen"><i class="fa fa-check mr-1"></i>89%</span>
+                    <span class="text-tech-lightGray ml-2">在线率</span>
+                </div>
+            </div>
+
+            <div class="bg-tech-gray/90 rounded-xl p-4 border border-tech-primary/30 glow card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-tech-lightGray text-sm">离线设备</p>
+                        <p class="text-3xl font-bold text-tech-neonRed mt-1">3</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-tech-neonRed/20 flex items-center justify-center">
+                        <i class="fa fa-exclamation-circle text-tech-neonRed text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-2 flex items-center text-sm">
+                    <span class="text-tech-neonRed"><i class="fa fa-arrow-down mr-1"></i>5%</span>
+                    <span class="text-tech-lightGray ml-2">较上月</span>
+                </div>
+            </div>
+
+            <div class="bg-tech-gray/90 rounded-xl p-4 border border-tech-primary/30 glow card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-tech-lightGray text-sm">维护中</p>
+                        <p class="text-3xl font-bold text-tech-neonYellow mt-1">2</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-tech-neonYellow/20 flex items-center justify-center">
+                        <i class="fa fa-wrench text-tech-neonYellow text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-2 flex items-center text-sm">
+                    <span class="text-tech-lightGray">预计完成</span>
+                    <span class="text-tech-neonYellow ml-2">3天后</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设备列表 -->
+        <div class="bg-tech-gray/90 rounded-xl p-6 border border-tech-primary/30 glow mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-tech-neon">
+                    <i class="fa fa-list mr-2"></i>设备列表
+                </h2>
+                <div class="flex items-center gap-2">
+                    <div class="relative">
+                        <input type="text" id="deviceSearch" placeholder="搜索设备..." 
+                               class="bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-sm text-white placeholder-tech-lightGray focus:outline-none focus:border-tech-neon pl-10">
+                        <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-tech-lightGray"></i>
+                    </div>
+                    <button onclick="showAddDeviceDialog()" class="px-4 py-2 rounded-lg bg-tech-primary hover:bg-tech-light text-sm transition-colors btn-hover">
+                        <i class="fa fa-plus mr-1"></i>添加设备
+                    </button>
+                    <button onclick="exportDevices()" class="px-4 py-2 rounded-lg bg-tech-gray hover:bg-tech-midGray text-sm transition-colors btn-hover">
+                        <i class="fa fa-download mr-1"></i>导出
+                    </button>
+                </div>
+            </div>
+
+            <!-- 设备表格 -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-tech-primary/30 text-left">
+                            <th class="py-3 px-4 text-sm font-medium text-tech-lightGray">设备名称</th>
+                            <th class="py-3 px-4 text-sm font-medium text-tech-lightGray">设备型号</th>
+                            <th class="py-3 px-4 text-sm font-medium text-tech-lightGray">设备编号</th>
+                            <th class="py-3 px-4 text-sm font-medium text-tech-lightGray">状态</th>
+                            <th class="py-3 px-4 text-sm font-medium text-tech-lightGray">最后在线</th>
+                            <th class="py-3 px-4 text-sm font-medium text-tech-lightGray">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deviceTableBody">
+                        <tr class="border-b border-tech-primary/10 hover:bg-tech-darker/50 transition-colors">
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-tech-primary/20 flex items-center justify-center">
+                                        <i class="fa fa-cogs text-tech-neon"></i>
+                                    </div>
+                                    <span class="text-white">驱动电机 #1</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">DM-3200</td>
+                            <td class="py-3 px-4 text-tech-lightGray font-mono">DEV-2024-001</td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-1 rounded-full bg-tech-neonGreen/20 text-tech-neonGreen text-xs">
+                                    <i class="fa fa-check-circle mr-1"></i>在线
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">2026-04-26 14:30</td>
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <button onclick="viewDevice(1)" class="px-3 py-1 rounded bg-tech-primary/20 hover:bg-tech-primary/30 text-xs transition-colors">
+                                        <i class="fa fa-eye mr-1"></i>查看
+                                    </button>
+                                    <button onclick="editDevice(1)" class="px-3 py-1 rounded bg-tech-neonYellow/20 hover:bg-tech-neonYellow/30 text-tech-neonYellow text-xs transition-colors">
+                                        <i class="fa fa-edit mr-1"></i>编辑
+                                    </button>
+                                    <button onclick="deleteDevice(1)" class="px-3 py-1 rounded bg-tech-neonRed/20 hover:bg-tech-neonRed/30 text-tech-neonRed text-xs transition-colors">
+                                        <i class="fa fa-trash mr-1"></i>删除
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-tech-primary/10 hover:bg-tech-darker/50 transition-colors">
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-tech-primary/20 flex items-center justify-center">
+                                        <i class="fa fa-bolt text-tech-neon"></i>
+                                    </div>
+                                    <span class="text-white">逆变器 #1</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">INV-400</td>
+                            <td class="py-3 px-4 text-tech-lightGray font-mono">DEV-2024-002</td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-1 rounded-full bg-tech-neonGreen/20 text-tech-neonGreen text-xs">
+                                    <i class="fa fa-check-circle mr-1"></i>在线
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">2026-04-26 14:30</td>
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <button onclick="viewDevice(2)" class="px-3 py-1 rounded bg-tech-primary/20 hover:bg-tech-primary/30 text-xs transition-colors">
+                                        <i class="fa fa-eye mr-1"></i>查看
+                                    </button>
+                                    <button onclick="editDevice(2)" class="px-3 py-1 rounded bg-tech-neonYellow/20 hover:bg-tech-neonYellow/30 text-tech-neonYellow text-xs transition-colors">
+                                        <i class="fa fa-edit mr-1"></i>编辑
+                                    </button>
+                                    <button onclick="deleteDevice(2)" class="px-3 py-1 rounded bg-tech-neonRed/20 hover:bg-tech-neonRed/30 text-tech-neonRed text-xs transition-colors">
+                                        <i class="fa fa-trash mr-1"></i>删除
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-tech-primary/10 hover:bg-tech-darker/50 transition-colors">
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-tech-primary/20 flex items-center justify-center">
+                                        <i class="fa fa-database text-tech-neon"></i>
+                                    </div>
+                                    <span class="text-white">负载设备 #1</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">LD-200</td>
+                            <td class="py-3 px-4 text-tech-lightGray font-mono">DEV-2024-003</td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-1 rounded-full bg-tech-neonGreen/20 text-tech-neonGreen text-xs">
+                                    <i class="fa fa-check-circle mr-1"></i>在线
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">2026-04-26 14:29</td>
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <button onclick="viewDevice(3)" class="px-3 py-1 rounded bg-tech-primary/20 hover:bg-tech-primary/30 text-xs transition-colors">
+                                        <i class="fa fa-eye mr-1"></i>查看
+                                    </button>
+                                    <button onclick="editDevice(3)" class="px-3 py-1 rounded bg-tech-neonYellow/20 hover:bg-tech-neonYellow/30 text-tech-neonYellow text-xs transition-colors">
+                                        <i class="fa fa-edit mr-1"></i>编辑
+                                    </button>
+                                    <button onclick="deleteDevice(3)" class="px-3 py-1 rounded bg-tech-neonRed/20 hover:bg-tech-neonRed/30 text-tech-neonRed text-xs transition-colors">
+                                        <i class="fa fa-trash mr-1"></i>删除
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-tech-primary/10 hover:bg-tech-darker/50 transition-colors">
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-tech-neonRed/20 flex items-center justify-center">
+                                        <i class="fa fa-battery-full text-tech-neonRed"></i>
+                                    </div>
+                                    <span class="text-white">电池管理单元</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">BMS-500</td>
+                            <td class="py-3 px-4 text-tech-lightGray font-mono">DEV-2024-004</td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-1 rounded-full bg-tech-neonRed/20 text-tech-neonRed text-xs">
+                                    <i class="fa fa-exclamation-circle mr-1"></i>离线
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">2026-04-26 10:15</td>
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <button onclick="viewDevice(4)" class="px-3 py-1 rounded bg-tech-primary/20 hover:bg-tech-primary/30 text-xs transition-colors">
+                                        <i class="fa fa-eye mr-1"></i>查看
+                                    </button>
+                                    <button onclick="editDevice(4)" class="px-3 py-1 rounded bg-tech-neonYellow/20 hover:bg-tech-neonYellow/30 text-tech-neonYellow text-xs transition-colors">
+                                        <i class="fa fa-edit mr-1"></i>编辑
+                                    </button>
+                                    <button onclick="deleteDevice(4)" class="px-3 py-1 rounded bg-tech-neonRed/20 hover:bg-tech-neonRed/30 text-tech-neonRed text-xs transition-colors">
+                                        <i class="fa fa-trash mr-1"></i>删除
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-tech-primary/10 hover:bg-tech-darker/50 transition-colors">
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-tech-neonYellow/20 flex items-center justify-center">
+                                        <i class="fa fa-tint text-tech-neonYellow"></i>
+                                    </div>
+                                    <span class="text-white">冷却系统</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">CS-100</td>
+                            <td class="py-3 px-4 text-tech-lightGray font-mono">DEV-2024-005</td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-1 rounded-full bg-tech-neonYellow/20 text-tech-neonYellow text-xs">
+                                    <i class="fa fa-wrench mr-1"></i>维护中
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-tech-lightGray">2026-04-26 08:00</td>
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-2">
+                                    <button onclick="viewDevice(5)" class="px-3 py-1 rounded bg-tech-primary/20 hover:bg-tech-primary/30 text-xs transition-colors">
+                                        <i class="fa fa-eye mr-1"></i>查看
+                                    </button>
+                                    <button onclick="editDevice(5)" class="px-3 py-1 rounded bg-tech-neonYellow/20 hover:bg-tech-neonYellow/30 text-tech-neonYellow text-xs transition-colors">
+                                        <i class="fa fa-edit mr-1"></i>编辑
+                                    </button>
+                                    <button onclick="deleteDevice(5)" class="px-3 py-1 rounded bg-tech-neonRed/20 hover:bg-tech-neonRed/30 text-tech-neonRed text-xs transition-colors">
+                                        <i class="fa fa-trash mr-1"></i>删除
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 分页 -->
+            <div class="flex items-center justify-between mt-4">
+                <p class="text-tech-lightGray text-sm">显示 1-5 条，共 28 条</p>
+                <div class="flex items-center gap-2">
+                    <button class="px-3 py-1 rounded bg-tech-gray hover:bg-tech-midGray text-sm transition-colors">
+                        <i class="fa fa-chevron-left mr-1"></i>上一页
+                    </button>
+                    <button class="px-3 py-1 rounded bg-tech-primary text-white text-sm">1</button>
+                    <button class="px-3 py-1 rounded bg-tech-gray hover:bg-tech-midGray text-sm transition-colors">2</button>
+                    <button class="px-3 py-1 rounded bg-tech-gray hover:bg-tech-midGray text-sm transition-colors">3</button>
+                    <button class="px-3 py-1 rounded bg-tech-gray hover:bg-tech-midGray text-sm transition-colors">...</button>
+                    <button class="px-3 py-1 rounded bg-tech-gray hover:bg-tech-midGray text-sm transition-colors">6</button>
+                    <button class="px-3 py-1 rounded bg-tech-gray hover:bg-tech-midGray text-sm transition-colors">
+                        下一页<i class="fa fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设备状态分布 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-tech-gray/90 rounded-xl p-6 border border-tech-primary/30 glow">
+                <h2 class="text-xl font-bold text-tech-neon mb-4">
+                    <i class="fa fa-pie-chart mr-2"></i>设备状态分布
+                </h2>
+                <div class="flex items-center justify-center">
+                    <div class="w-48 h-48 rounded-full border-8 border-tech-neonGreen flex items-center justify-center" style="border-left-color: transparent; border-bottom-color: transparent; transform: rotate(-45deg);">
+                        <div class="w-32 h-32 rounded-full bg-tech-darker flex items-center justify-center" style="transform: rotate(45deg);">
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-tech-neon">89%</p>
+                                <p class="text-xs text-tech-lightGray">在线率</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center gap-6 mt-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-tech-neonGreen"></div>
+                        <span class="text-sm text-tech-lightGray">在线 (25)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-tech-neonRed"></div>
+                        <span class="text-sm text-tech-lightGray">离线 (3)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-tech-neonYellow"></div>
+                        <span class="text-sm text-tech-lightGray">维护 (2)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-tech-gray/90 rounded-xl p-6 border border-tech-primary/30 glow">
+                <h2 class="text-xl font-bold text-tech-neon mb-4">
+                    <i class="fa fa-tasks mr-2"></i>设备类型分布
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-tech-lightGray">驱动电机</span>
+                            <span class="text-tech-neon">8 台</span>
+                        </div>
+                        <div class="h-2 bg-tech-darker rounded-full overflow-hidden">
+                            <div class="h-full bg-tech-primary rounded-full" style="width: 29%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-tech-lightGray">逆变器</span>
+                            <span class="text-tech-neon">6 台</span>
+                        </div>
+                        <div class="h-2 bg-tech-darker rounded-full overflow-hidden">
+                            <div class="h-full bg-tech-neon rounded-full" style="width: 21%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-tech-lightGray">负载设备</span>
+                            <span class="text-tech-neon">5 台</span>
+                        </div>
+                        <div class="h-2 bg-tech-darker rounded-full overflow-hidden">
+                            <div class="h-full bg-tech-neonGreen rounded-full" style="width: 18%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-tech-lightGray">电池管理系统</span>
+                            <span class="text-tech-neon">4 台</span>
+                        </div>
+                        <div class="h-2 bg-tech-darker rounded-full overflow-hidden">
+                            <div class="h-full bg-tech-neonYellow rounded-full" style="width: 14%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-tech-lightGray">冷却系统</span>
+                            <span class="text-tech-neon">5 台</span>
+                        </div>
+                        <div class="h-2 bg-tech-darker rounded-full overflow-hidden">
+                            <div class="h-full bg-tech-neonRed rounded-full" style="width: 18%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设备详情对话框 -->
+    <div id="deviceDetailDialog" class="fixed inset-0 z-50 hidden items-center justify-center bg-tech-darker/80 backdrop-blur-sm">
+        <div class="bg-tech-gray rounded-xl p-6 max-w-2xl w-full mx-4 animate-slideIn border border-tech-primary/30">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-tech-neon">
+                    <i class="fa fa-info-circle mr-2"></i>设备详情
+                </h3>
+                <button onclick="closeDeviceDialog()" class="text-tech-lightGray hover:text-white">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="deviceDetailContent" class="space-y-4">
+                <!-- 内容将由JavaScript填充 -->
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button onclick="closeDeviceDialog()" class="px-4 py-2 rounded bg-tech-midGray hover:bg-tech-gray text-sm transition-colors">
+                    关闭
+                </button>
+                <button onclick="startMaintenance()" class="px-4 py-2 rounded bg-tech-neonYellow hover:bg-tech-light text-sm transition-colors">
+                    <i class="fa fa-wrench mr-1"></i>开始维护
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加设备对话框 -->
+    <div id="addDeviceDialog" class="fixed inset-0 z-50 hidden items-center justify-center bg-tech-darker/80 backdrop-blur-sm">
+        <div class="bg-tech-gray rounded-xl p-6 max-w-lg w-full mx-4 animate-slideIn border border-tech-primary/30">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-tech-neon">
+                    <i class="fa fa-plus-circle mr-2"></i>添加设备
+                </h3>
+                <button onclick="closeAddDeviceDialog()" class="text-tech-lightGray hover:text-white">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-tech-lightGray mb-1">设备名称</label>
+                    <input type="text" id="newDeviceName" placeholder="请输入设备名称" 
+                           class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white placeholder-tech-lightGray focus:outline-none focus:border-tech-neon">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-tech-lightGray mb-1">设备型号</label>
+                    <input type="text" id="newDeviceModel" placeholder="请输入设备型号" 
+                           class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white placeholder-tech-lightGray focus:outline-none focus:border-tech-neon">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-tech-lightGray mb-1">设备编号</label>
+                    <input type="text" id="newDeviceCode" placeholder="请输入设备编号" 
+                           class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white placeholder-tech-lightGray focus:outline-none focus:border-tech-neon">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-tech-lightGray mb-1">设备类型</label>
+                    <select id="newDeviceType" class="w-full bg-tech-darker border border-tech-primary/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-tech-neon">
+                        <option value="motor">驱动电机</option>
+                        <option value="inverter">逆变器</option>
+                        <option value="load">负载设备</option>
+                        <option value="bms">电池管理系统</option>
+                        <option value="cooling">冷却系统</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button onclick="closeAddDeviceDialog()" class="px-4 py-2 rounded bg-tech-midGray hover:bg-tech-gray text-sm transition-colors">
+                    取消
+                </button>
+                <button onclick="saveNewDevice()" class="px-4 py-2 rounded bg-tech-primary hover:bg-tech-light text-sm transition-colors">
+                    <i class="fa fa-save mr-1"></i>保存
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息框 -->
+    <div id="messageBox" class="fixed top-4 right-4 z-50 hidden">
+        <div class="bg-tech-gray border border-tech-primary rounded-lg p-4 shadow-lg animate-slideIn" style="max-width: 300px;">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <i id="messageIcon" class="fa text-xl"></i>
+                </div>
+                <div class="ml-3 flex-1">
+                    <h3 id="messageTitle" class="text-sm font-medium text-white"></h3>
+                    <div id="messageContent" class="mt-1 text-sm text-tech-lightGray"></div>
+                </div>
+                <button onclick="closeMessage()" class="ml-4 flex-shrink-0 text-tech-lightGray hover:text-white">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        // 显示用户信息
+        function displayUserInfo() {
+            const username = localStorage.getItem('username') || '管理员';
+            const userType = localStorage.getItem('userType') || 'admin';
+            
+            document.getElementById('userName').textContent = username;
+            document.getElementById('userType').textContent = userType === 'admin' ? '管理员' : '客户';
+        }
+
+        // 页面导航
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // 登出
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'login.html';
+        }
+
+        // 打开管理员配置对话框
+        function openAdminConfig() {
+            const configData = JSON.parse(localStorage.getItem('adminConfig') || '{}');
+
+            const dialog = document.createElement('div');
+            dialog.className = 'fixed inset-0 z-50 flex items-center justify-center bg-tech-darker/80 backdrop-blur-sm';
+            dialog.innerHTML = `
+                <div class="bg-tech-gray rounded-xl p-6 max-w-2xl w-full mx-4 animate-slideIn border border-tech-primary/30 max-h-[90vh] overflow-y-auto">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-tech-neon">
+                            <i class="fa fa-cog mr-2"></i>管理员配置
+                        </h3>
+                        <button onclick="closeAdminConfig()" class="text-tech-lightGray hover:text-white">
+                            <i class="fa fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- 设备参数配置 -->
+                        <div class="bg-tech-darker rounded-lg p-4 border border-tech-primary/20">
+                            <h4 class="text-lg font-bold text-tech-neon mb-3 flex items-center">
+                                <i class="fa fa-cogs mr-2"></i>设备参数阈值
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">最高温度阈值</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="config_max_temp" value="${configData.maxTemp || 80}" class="w-20 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">°C</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">最高电压阈值</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="config_max_volt" value="${configData.maxVolt || 420}" class="w-20 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">V</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">最低电压阈值</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="config_min_volt" value="${configData.minVolt || 280}" class="w-20 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">V</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">最高电流阈值</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="config_max_curr" value="${configData.maxCurr || 200}" class="w-20 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">A</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">通讯超时时间</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="config_comm_timeout" value="${configData.commTimeout || 30}" class="w-20 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">s</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 报警规则配置 -->
+                        <div class="bg-tech-darker rounded-lg p-4 border border-tech-primary/20">
+                            <h4 class="text-lg font-bold text-tech-neon mb-3 flex items-center">
+                                <i class="fa fa-bell mr-2"></i>报警规则配置
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">温度报警</label>
+                                    <select id="config_temp_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.tempAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.tempAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">电压报警</label>
+                                    <select id="config_volt_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.voltAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.voltAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">电流报警</label>
+                                    <select id="config_curr_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.currAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.currAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">离线报警</label>
+                                    <select id="config_offline_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.offlineAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.offlineAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">通讯中断报警</label>
+                                    <select id="config_comm_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.commAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.commAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 用户权限配置 -->
+                        <div class="bg-tech-darker rounded-lg p-4 border border-tech-primary/20">
+                            <h4 class="text-lg font-bold text-tech-neon mb-3 flex items-center">
+                                <i class="fa fa-users mr-2"></i>客户端权限配置
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">允许查看数据</label>
+                                    <select id="config_view_data" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.viewData !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.viewData === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">允许查看报警</label>
+                                    <select id="config_view_alarm" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.viewAlarm !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.viewAlarm === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">允许接收推送</label>
+                                    <select id="config_push" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.push !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.push === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">允许导出数据</label>
+                                    <select id="config_export" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.export !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.export === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 推送配置 -->
+                        <div class="bg-tech-darker rounded-lg p-4 border border-tech-primary/20">
+                            <h4 class="text-lg font-bold text-tech-neon mb-3 flex items-center">
+                                <i class="fa fa-wechat mr-2"></i>推送配置
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">推送时间段</label>
+                                    <div class="flex items-center gap-1">
+                                        <input type="number" id="config_push_start" value="${configData.pushStart || 8}" min="0" max="23" class="w-12 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray">-</span>
+                                        <input type="number" id="config_push_end" value="${configData.pushEnd || 22}" min="0" max="23" class="w-12 bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm text-center">
+                                        <span class="text-tech-lightGray text-sm">时</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">紧急告警即时推送</label>
+                                    <select id="config_critical_push" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.criticalPush !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.criticalPush === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-sm text-tech-lightGray">日报推送</label>
+                                    <select id="config_daily_push" class="bg-tech-gray border border-tech-primary/30 rounded px-2 py-1 text-white text-sm">
+                                        <option value="enabled" ${(configData.dailyPush !== 'disabled') ? 'selected' : ''}>启用</option>
+                                        <option value="disabled" ${(configData.dailyPush === 'disabled') ? 'selected' : ''}>禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button onclick="closeAdminConfig()" class="px-4 py-2 rounded bg-tech-midGray hover:bg-tech-gray transition-colors btn-hover">
+                            取消
+                        </button>
+                        <button onclick="syncConfigToClients()" class="px-4 py-2 rounded bg-tech-primary hover:bg-tech-light transition-colors btn-hover">
+                            <i class="fa fa-sync mr-1"></i>保存并同步
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(dialog);
+        }
+
+        // 关闭管理员配置对话框
+        function closeAdminConfig() {
+            const dialog = document.querySelector('.fixed.inset-0.z-50');
+            if (dialog) {
+                dialog.remove();
+            }
+        }
+
+        // 同步配置到客户端
+        function syncConfigToClients() {
+            const configData = {
+                maxTemp: parseInt(document.getElementById('config_max_temp').value) || 80,
+                maxVolt: parseInt(document.getElementById('config_max_volt').value) || 420,
+                minVolt: parseInt(document.getElementById('config_min_volt').value) || 280,
+                maxCurr: parseInt(document.getElementById('config_max_curr').value) || 200,
+                commTimeout: parseInt(document.getElementById('config_comm_timeout').value) || 30,
+                tempAlarm: document.getElementById('config_temp_alarm').value,
+                voltAlarm: document.getElementById('config_volt_alarm').value,
+                currAlarm: document.getElementById('config_curr_alarm').value,
+                offlineAlarm: document.getElementById('config_offline_alarm').value,
+                commAlarm: document.getElementById('config_comm_alarm').value,
+                viewData: document.getElementById('config_view_data').value,
+                viewAlarm: document.getElementById('config_view_alarm').value,
+                push: document.getElementById('config_push').value,
+                export: document.getElementById('config_export').value,
+                pushStart: parseInt(document.getElementById('config_push_start').value) || 8,
+                pushEnd: parseInt(document.getElementById('config_push_end').value) || 22,
+                criticalPush: document.getElementById('config_critical_push').value,
+                dailyPush: document.getElementById('config_daily_push').value,
+                lastUpdate: new Date().toISOString()
+            };
+
+            localStorage.setItem('adminConfig', JSON.stringify(configData));
+            closeAdminConfig();
+            showMessage('配置已保存', '配置已保存并同步到所有客户端', 'success');
+        }
+
+        // 显示消息框
+        function showMessage(title, message, type = 'info') {
+            const messageBox = document.getElementById('messageBox');
+            const messageIcon = document.getElementById('messageIcon');
+            const messageTitle = document.getElementById('messageTitle');
+            const messageContent = document.getElementById('messageContent');
+
+            messageIcon.className = 'fa';
+            if (type === 'success') {
+                messageIcon.classList.add('fa-check-circle', 'text-tech-neonGreen');
+            } else if (type === 'error') {
+                messageIcon.classList.add('fa-exclamation-circle', 'text-tech-neonRed');
+            } else {
+                messageIcon.classList.add('fa-info-circle', 'text-tech-neon');
+            }
+
+            messageTitle.textContent = title;
+            messageContent.textContent = message;
+            messageBox.classList.remove('hidden');
+
+            setTimeout(() => {
+                closeMessage();
+            }, 3000);
+        }
+
+        // 关闭消息框
+        function closeMessage() {
+            document.getElementById('messageBox').classList.add('hidden');
+        }
+
+        // 查看设备
+        function viewDevice(id) {
+            const deviceData = {
+                1: { name: '驱动电机 #1', model: 'DM-3200', code: 'DEV-2024-001', status: '在线', lastOnline: '2026-04-26 14:30', voltage: '380V', current: '125A', power: '45kW', efficiency: '96.5%', temp: '42°C' },
+                2: { name: '逆变器 #1', model: 'INV-400', code: 'DEV-2024-002', status: '在线', lastOnline: '2026-04-26 14:30', voltage: '320V', current: '100A', power: '32kW', efficiency: '98.2%', temp: '38°C' },
+                3: { name: '负载设备 #1', model: 'LD-200', code: 'DEV-2024-003', status: '在线', lastOnline: '2026-04-26 14:29', voltage: '400V', current: '50A', power: '20kW', efficiency: '95.8%', temp: '35°C' },
+                4: { name: '电池管理单元', model: 'BMS-500', code: 'DEV-2024-004', status: '离线', lastOnline: '2026-04-26 10:15', voltage: 'N/A', current: 'N/A', power: 'N/A', efficiency: 'N/A', temp: 'N/A' },
+                5: { name: '冷却系统', model: 'CS-100', code: 'DEV-2024-005', status: '维护中', lastOnline: '2026-04-26 08:00', voltage: '220V', current: '15A', power: '3kW', efficiency: 'N/A', temp: '25°C' }
+            };
+
+            const device = deviceData[id] || deviceData[1];
+            const content = document.getElementById('deviceDetailContent');
+            content.innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-tech-darker rounded-lg p-3">
+                        <p class="text-xs text-tech-lightGray">设备名称</p>
+                        <p class="text-white font-medium">${device.name}</p>
+                    </div>
+                    <div class="bg-tech-darker rounded-lg p-3">
+                        <p class="text-xs text-tech-lightGray">设备型号</p>
+                        <p class="text-white font-medium">${device.model}</p>
+                    </div>
+                    <div class="bg-tech-darker rounded-lg p-3">
+                        <p class="text-xs text-tech-lightGray">设备编号</p>
+                        <p class="text-white font-medium font-mono">${device.code}</p>
+                    </div>
+                    <div class="bg-tech-darker rounded-lg p-3">
+                        <p class="text-xs text-tech-lightGray">状态</p>
+                        <p class="text-white font-medium">${device.status}</p>
+                    </div>
+                    <div class="bg-tech-darker rounded-lg p-3">
+                        <p class="text-xs text-tech-lightGray">电压</p>
+                        <p class="text-white font-medium">${device.voltage}</p>
+                    </div>
+                    <div class="bg-tech-darker rounded-lg p-3">
+                        <p class="text-xs text-tech-lightGray">电流</p>
+                        <p class="text-white font-medium">${device.current}</p>
+                    </div>
+                    <div class="bg-tech-darker rounded-lg p-3">
+                        <p class="text-xs text-tech-lightGray">功率</p>
+                        <p class="text-white font-medium">${device.power}</p>
+                    </div>
+                    <div class="bg-tech-darker rounded-lg p-3">
+                        <p class="text-xs text-tech-lightGray">效率</p>
+                        <p class="text-white font-medium">${device.efficiency}</p>
+                    </div>
+                    <div class="bg-tech-darker rounded-lg p-3 col-span-2">
+                        <p class="text-xs text-tech-lightGray">温度</p>
+                        <p class="text-white font-medium">${device.temp}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('deviceDetailDialog').classList.remove('hidden');
+            document.getElementById('deviceDetailDialog').classList.add('flex');
+        }
+
+        // 编辑设备
+        function editDevice(id) {
+            showMessage('编辑设备', `正在编辑设备 #${id}`, 'info');
+        }
+
+        // 删除设备
+        function deleteDevice(id) {
+            if (confirm('确定要删除此设备吗？')) {
+                showMessage('删除成功', `设备 #${id} 已删除`, 'success');
+            }
+        }
+
+        // 关闭设备详情对话框
+        function closeDeviceDialog() {
+            document.getElementById('deviceDetailDialog').classList.add('hidden');
+            document.getElementById('deviceDetailDialog').classList.remove('flex');
+        }
+
+        // 开始维护
+        function startMaintenance() {
+            showMessage('开始维护', '设备已进入维护模式', 'info');
+            closeDeviceDialog();
+        }
+
+        // 显示添加设备对话框
+        function showAddDeviceDialog() {
+            document.getElementById('addDeviceDialog').classList.remove('hidden');
+            document.getElementById('addDeviceDialog').classList.add('flex');
+        }
+
+        // 关闭添加设备对话框
+        function closeAddDeviceDialog() {
+            document.getElementById('addDeviceDialog').classList.add('hidden');
+            document.getElementById('addDeviceDialog').classList.remove('flex');
+        }
+
+        // 保存新设备
+        function saveNewDevice() {
+            const name = document.getElementById('newDeviceName').value;
+            const model = document.getElementById('newDeviceModel').value;
+            const code = document.getElementById('newDeviceCode').value;
+            const type = document.getElementById('newDeviceType').value;
+
+            if (!name || !model || !code) {
+                showMessage('添加失败', '请填写所有必填字段', 'error');
+                return;
+            }
+
+            const devices = JSON.parse(localStorage.getItem('devices') || '[]');
+            const newDevice = {
+                id: Date.now(),
+                name: name,
+                model: model,
+                code: code,
+                type: type,
+                status: 'online',
+                createTime: new Date().toISOString()
+            };
+            devices.push(newDevice);
+            localStorage.setItem('devices', JSON.stringify(devices));
+
+            showMessage('添加成功', `设备 "${name}" 已成功添加`, 'success');
+            closeAddDeviceDialog();
+            renderDevices();
+        }
+
+        // 加载设备列表
+        function loadDevices() {
+            const devices = JSON.parse(localStorage.getItem('devices') || '[]');
+            if (devices.length === 0) {
+                const defaultDevices = [
+                    { id: 1, name: '驱动电机 #1', model: 'DM-3000', code: 'MTR-001', type: 'motor', status: 'online' },
+                    { id: 2, name: '逆变器 #1', model: 'INV-5000', code: 'INV-001', type: 'inverter', status: 'online' },
+                    { id: 3, name: '电池管理系统', model: 'BMS-2000', code: 'BMS-001', type: 'bms', status: 'warning' },
+                    { id: 4, name: '冷却系统 #1', model: 'CLS-1000', code: 'CLS-001', type: 'cooling', status: 'online' }
+                ];
+                localStorage.setItem('devices', JSON.stringify(defaultDevices));
+                return defaultDevices;
+            }
+            return devices;
+        }
+
+        // 渲染设备列表
+        function renderDevices() {
+            const devices = JSON.parse(localStorage.getItem('devices') || '[]');
+            const container = document.getElementById('deviceTableBody');
+            if (!container) return;
+
+            let html = '';
+            devices.forEach(device => {
+                const statusClass = device.status === 'online' ? 'tech-neonGreen' : device.status === 'warning' ? 'tech-neonYellow' : 'tech-neonRed';
+                const statusText = device.status === 'online' ? '在线' : device.status === 'warning' ? '告警' : '离线';
+                const typeNames = { motor: '驱动电机', inverter: '逆变器', load: '负载设备', bms: '电池管理系统', cooling: '冷却系统' };
+
+                html += `<tr class="border-b border-tech-primary/10 hover:bg-tech-darker/50 transition-colors">
+                    <td class="py-3 px-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-tech-primary/20 flex items-center justify-center">
+                                <i class="fa fa-cogs text-tech-neon"></i>
+                            </div>
+                            <span class="text-white">${device.name}</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 text-tech-lightGray">${device.model}</td>
+                    <td class="py-3 px-4 text-tech-lightGray font-mono">${device.code}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-1 rounded-full bg-${statusClass}/20 text-${statusClass} text-xs">
+                            <i class="fa fa-check-circle mr-1"></i>${statusText}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-tech-lightGray">${new Date(device.createTime).toLocaleString('zh-CN')}</td>
+                    <td class="py-3 px-4">
+                        <div class="flex items-center gap-2">
+                            <button onclick="viewDevice(${device.id})" class="px-3 py-1 rounded bg-tech-primary/20 hover:bg-tech-primary/30 text-xs transition-colors">
+                                <i class="fa fa-eye mr-1"></i>查看
+                            </button>
+                            <button onclick="editDevice(${device.id})" class="px-3 py-1 rounded bg-tech-neonYellow/20 hover:bg-tech-neonYellow/30 text-tech-neonYellow text-xs transition-colors">
+                                <i class="fa fa-pencil mr-1"></i>编辑
+                            </button>
+                            <button onclick="deleteDevice(${device.id})" class="px-3 py-1 rounded bg-tech-neonRed/20 hover:bg-tech-neonRed/30 text-tech-neonRed text-xs transition-colors">
+                                <i class="fa fa-trash mr-1"></i>删除
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+            container.innerHTML = html || '<tr><td colspan="6" class="py-4 text-center text-tech-lightGray">暂无设备</td></tr>';
+        }
+
+        // 编辑设备
+        function editDevice(id) {
+            const devices = JSON.parse(localStorage.getItem('devices') || '[]');
+            const device = devices.find(d => d.id === id);
+            if (!device) return;
+
+            const newName = prompt('设备名称:', device.name);
+            if (newName === null) return;
+            const newModel = prompt('设备型号:', device.model);
+            if (newModel === null) return;
+            const newCode = prompt('设备编号:', device.code);
+            if (newCode === null) return;
+
+            if (newName && newModel && newCode) {
+                device.name = newName;
+                device.model = newModel;
+                device.code = newCode;
+                localStorage.setItem('devices', JSON.stringify(devices));
+                showMessage('修改成功', '设备信息已更新', 'success');
+                renderDevices();
+            }
+        }
+
+        // 删除设备
+        function deleteDevice(id) {
+            if (!confirm('确定要删除该设备吗？')) return;
+
+            let devices = JSON.parse(localStorage.getItem('devices') || '[]');
+            devices = devices.filter(d => d.id !== id);
+            localStorage.setItem('devices', JSON.stringify(devices));
+            showMessage('删除成功', '设备已删除', 'success');
+            renderDevices();
+        }
+
+        // 导出设备
+        function exportDevices() {
+            showMessage('导出成功', '设备列表已导出', 'success');
+        }
+
+        // 页面加载时初始化
+        // 加载管理员配置到客户端视图
+        function loadAdminConfig() {
+            const configData = JSON.parse(localStorage.getItem('adminConfig') || '{}');
+            const userType = localStorage.getItem('userType') || 'admin';
+
+            if (userType !== 'admin') {
+                document.getElementById('adminConfigBtn').classList.add('hidden');
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            } else {
+                document.getElementById('adminConfigBtn').classList.remove('hidden');
+            }
+        }
+
+        window.onload = function() {
+            checkLoginStatus();
+            displayUserInfo();
+            loadAdminConfig();
+            loadDevices();
+            renderDevices();
+            showMessage('欢迎', '欢迎使用设备管理模块', 'success');
+        };
+    </script>
+</body>
+</html>
